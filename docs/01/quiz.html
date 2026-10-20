@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>1차시 웹 퀴즈</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@500;700&family=Noto+Sans+KR:wght@400;700&display=swap">
+<style>
+:root{--bg:#F7F5EF;--card:#FDFCF9;--ink:#1F2A44;--soft:#4A5568;--line:#C9D3E3;--blue:#2F6DB5;--blue-l:#DCE7F5;--org:#D9661F;--org-t:#B4531A;--org-l:#FBE3D2;--ok:#2F6DB5;--bad:#B4531A}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Noto Sans KR',sans-serif;line-height:1.6}
+main{max-width:760px;margin:0 auto;padding:32px 16px 64px}
+a{color:var(--blue)}
+h1{font-family:'IBM Plex Sans KR',sans-serif;font-size:30px;margin:8px 0 4px}
+.sub{color:var(--soft);margin:0 0 20px}
+.progress{height:8px;background:var(--blue-l);border-radius:8px;overflow:hidden;margin-bottom:20px}
+.progress>div{height:100%;background:var(--blue);width:0;transition:width .4s}
+.card{background:var(--card);border:2px solid var(--line);border-radius:16px;padding:24px}
+.qno{font-weight:700;color:var(--org-t);font-size:14px;letter-spacing:1px}
+.q{font-size:20px;font-weight:700;margin:6px 0 16px}
+.fig{display:flex;justify-content:center;margin:0 0 16px}
+.fig svg{max-width:100%;height:auto}
+.opts{display:grid;gap:10px}
+.opt{text-align:left;background:#fff;border:2px solid var(--line);border-radius:12px;padding:12px 16px;font:inherit;font-size:17px;color:var(--ink);cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--blue)}
+.opt.right{border-color:var(--ok);background:var(--blue-l)}
+.opt.wrong{border-color:var(--bad);background:var(--org-l)}
+.num{display:flex;gap:10px;flex-wrap:wrap}
+.num input{flex:1;min-width:160px;font:inherit;font-size:18px;padding:10px 14px;border:2px solid var(--line);border-radius:12px}
+button.main{background:var(--blue);color:#FDFCF9;border:0;border-radius:12px;padding:12px 20px;font:inherit;font-weight:700;cursor:pointer}
+button.main:disabled{opacity:.4;cursor:default}
+.fb{margin-top:16px;padding:14px 16px;border-radius:12px;display:none}
+.fb.show{display:block}
+.fb.ok{background:var(--blue-l);border-left:6px solid var(--ok)}
+.fb.no{background:var(--org-l);border-left:6px solid var(--bad)}
+.nav{display:flex;justify-content:flex-end;margin-top:16px}
+.result{text-align:center}
+.big{font-size:56px;font-weight:700;font-family:'IBM Plex Sans KR',sans-serif}
+.review{text-align:left;margin-top:16px}
+.review li{margin-bottom:6px}
+i{font-family:'Times New Roman',serif}
+</style>
+</head>
+<body>
+<main>
+<a href="../index.html">← 목록</a>
+<h1>1차시 웹 퀴즈</h1>
+<p class="sub">확률변수와 확률분포 · 10문항 · 정답과 해설 바로 확인</p>
+<div class="progress"><div id="bar"></div></div>
+<div class="card" id="box"></div>
+</main>
+<script>
+const AX='stroke="#1F2A44" stroke-width="2"';
+const Q=[
+{q:'동전 2회 던지기, <i>X</i> = 앞면이 나온 횟수. <i>X</i>가 취하는 값 전체는?',
+ o:['{1, 2}','{0, 1, 2}','{0, 1, 2, 3}','{HH, HT, TH, TT}'],a:1,
+ e:'앞면 0번(TT), 1번(HT, TH), 2번(HH) → {0, 1, 2}. {HH, HT, TH, TT}는 표본공간이고 확률변수의 값이 아님.'},
+{q:'다음 중 <b>이산</b>확률변수는?',
+ o:['지하철 대기 시간(분)','1초 동안 들어온 서버 접속 요청 수','저항값 측정 오차(Ω)','전구의 수명(시간)'],a:1,
+ e:'접속 요청 수는 0, 1, 2, …로 셀 수 있는 값 → 이산. 나머지는 구간의 모든 실수 값 → 연속.'},
+{q:'확률분포 표에서 <i>a</i>의 값은?',
+ fig:'<svg width="420" height="90" viewBox="0 0 420 90"><rect x="0" y="0" width="420" height="40" fill="#DCE7F5"/><g font-family="sans-serif" font-size="18" fill="#1F2A44" text-anchor="middle"><text x="60" y="26">X</text><text x="150" y="26">0</text><text x="240" y="26">1</text><text x="330" y="26">2</text><text x="60" y="70">P(X=x)</text><text x="150" y="70">0.3</text><text x="240" y="70" font-style="italic" font-weight="700" fill="#B4531A">a</text><text x="330" y="70">0.5</text></g><line x1="0" y1="85" x2="420" y2="85" stroke="#C9D3E3" stroke-width="2"/></svg>',
+ num:0.2,e:'확률의 합 = 1 → 0.3 + <i>a</i> + 0.5 = 1 → <i>a</i> = 0.2.'},
+{q:'<i>X</i>의 확률분포가 P(<i>X</i>=1)=1/5, P(<i>X</i>=2)=3/5, P(<i>X</i>=3)=1/5일 때 P(<i>X</i> ≤ 2)는?',
+ o:['1/5','3/5','4/5','1'],a:2,e:'P(<i>X</i>=1) + P(<i>X</i>=2) = 1/5 + 3/5 = 4/5. 여사건으로 1 − P(<i>X</i>=3)도 가능.'},
+{q:'10분 간격 지하철, 임의의 시각에 도착. 대기 시간이 2분 이상 5분 이하일 확률은?',
+ fig:'<svg width="420" height="150" viewBox="0 0 420 150"><rect x="40" y="40" width="340" height="80" fill="#DCE7F5"/><rect x="108" y="40" width="102" height="80" fill="#D9661F"/><line x1="40" y1="40" x2="380" y2="40" stroke="#2F6DB5" stroke-width="3"/><line x1="20" y1="120" x2="400" y2="120" '+AX+'/><g font-family="sans-serif" font-size="16" fill="#1F2A44" text-anchor="middle"><text x="40" y="142">0</text><text x="108" y="142">2</text><text x="210" y="142">5</text><text x="380" y="142">10</text><text x="400" y="34" fill="#2F6DB5">1/10</text></g></svg>',
+ num:0.3,e:'넓이 = (5 − 2) × 1/10 = 3/10 = 0.3.'},
+{q:'0 ≤ <i>X</i> ≤ 4, 확률밀도함수 <i>f</i>(<i>x</i>) = <i>kx</i>일 때 상수 <i>k</i>는?',
+ fig:'<svg width="300" height="160" viewBox="0 0 300 160"><path d="M40 130 L260 130 L260 20 Z" fill="#DCE7F5"/><line x1="40" y1="130" x2="260" y2="20" stroke="#2F6DB5" stroke-width="3"/><line x1="20" y1="130" x2="290" y2="130" '+AX+'/><line x1="40" y1="145" x2="40" y2="10" '+AX+'/><g font-family="sans-serif" font-size="16" fill="#1F2A44" text-anchor="middle"><text x="260" y="152">4</text><text x="22" y="26" font-style="italic">4k</text></g></svg>',
+ o:['1/4','1/8','1/16','1/2'],a:1,e:'전체 넓이 = 1/2 × 4 × 4<i>k</i> = 8<i>k</i> = 1 → <i>k</i> = 1/8.'},
+{q:'연속확률변수 <i>X</i>에 대하여 P(<i>X</i> = 3)의 값은?',
+ o:['0','f(3)','1/2','알 수 없음'],a:0,e:'한 점은 폭이 0인 선분 → 넓이 0 → 확률 0. 확률밀도함수의 값 f(3)은 확률이 아님.'},
+{q:'0 ≤ <i>X</i> ≤ 1, <i>f</i>(<i>x</i>) = 4<i>x</i>³일 때 P(0 ≤ <i>X</i> ≤ 1/2)는?',
+ fig:'<svg width="300" height="170" viewBox="0 0 300 170"><path d="M40 140 L70 139.8 L100 138.1 L130 133.7 L160 125 L190 110.7 L220 89.4 L250 59.6 L280 20 L280 140 Z" fill="#DCE7F5"/><path d="M40 140 L70 139.8 L100 138.1 L130 133.7 L160 125 L160 140 Z" fill="#D9661F"/><polyline points="40,140 70,139.8 100,138.1 130,133.7 160,125 190,110.7 220,89.4 250,59.6 280,20" fill="none" stroke="#2F6DB5" stroke-width="3"/><line x1="20" y1="140" x2="295" y2="140" '+AX+'/><g font-family="sans-serif" font-size="16" fill="#1F2A44" text-anchor="middle"><text x="160" y="162">1/2</text><text x="280" y="162">1</text></g></svg>',
+ o:['1/2','1/4','1/8','1/16'],a:3,e:'∫₀^{1/2} 4<i>x</i>³ d<i>x</i> = [<i>x</i>⁴]₀^{1/2} = 1/16. 구간 길이는 절반이지만 넓이는 6.25%.'},
+{q:'불량률 20%인 부품 3개를 독립적으로 검사. 불량품이 하나도 없을 확률은? (소수로)',
+ num:0.512,e:'정상일 확률 0.8이 세 번 → 0.8³ = 0.512.'},
+{q:'"확률밀도함수 <i>f</i>(<i>x</i>)의 값은 1보다 클 수 없음." 참일까?',
+ o:['참','거짓'],a:1,e:'거짓. 확률은 넓이이므로 높이 <i>f</i>(<i>x</i>)는 1보다 커도 됨. 예: <i>f</i>(<i>x</i>) = 4<i>x</i>³에서 <i>f</i>(1) = 4.'}
+];
+const box=document.getElementById('box'),bar=document.getElementById('bar');
+let cur=0,score=0,log=[];
+function parseNum(s){s=s.trim().replace(/\s/g,'');if(!s)return NaN;if(s.includes('/')){const[a,b]=s.split('/').map(Number);return a/b}return Number(s)}
+function shuffle(n){const a=[...Array(n).keys()];for(let i=n-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function render(){
+ bar.style.width=(cur/Q.length*100)+'%';
+ if(cur>=Q.length)return finish();
+ const it=Q[cur];
+ let h=`<div class="qno">문항 ${cur+1} / ${Q.length}</div><div class="q">${it.q}</div>`;
+ if(it.fig)h+=`<div class="fig">${it.fig}</div>`;
+ if('num' in it){h+=`<div class="num"><input id="ans" inputmode="decimal" placeholder="예: 0.25 또는 1/4"><button class="main" id="chk">확인</button></div>`}
+ else{const ord=it.o.length>2?shuffle(it.o.length):[0,1];h+='<div class="opts">'+ord.map(k=>`<button class="opt" data-k="${k}">${it.o[k]}</button>`).join('')+'</div>'}
+ h+='<div class="fb" id="fb"></div><div class="nav"><button class="main" id="nx" disabled>다음 →</button></div>';
+ box.innerHTML=h;
+ document.getElementById('nx').onclick=()=>{cur++;render()};
+ if('num' in it){const inp=document.getElementById('ans'),chk=document.getElementById('chk');
+  const go=()=>{const v=parseNum(inp.value);if(isNaN(v))return;inp.disabled=chk.disabled=true;judge(Math.abs(v-it.num)<1e-3)};
+  chk.onclick=go;inp.onkeydown=e=>{if(e.key==='Enter')go()};inp.focus()}
+ else box.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+  const k=+b.dataset.k;box.querySelectorAll('.opt').forEach(x=>{x.disabled=true;if(+x.dataset.k===it.a)x.classList.add('right')});
+  if(k!==it.a)b.classList.add('wrong');judge(k===it.a)});
+}
+function judge(ok){
+ if(ok)score++;log.push(ok);
+ const fb=document.getElementById('fb');fb.className='fb show '+(ok?'ok':'no');
+ fb.innerHTML=(ok?'<b>정답</b> · ':'<b>오답</b> · ')+Q[cur].e;
+ const nx=document.getElementById('nx');nx.disabled=false;nx.textContent=cur===Q.length-1?'결과 보기':'다음 →';nx.focus();
+}
+function finish(){
+ const msg=score>=9?'개념 완벽 이해':score>=6?'핵심 개념 이해, 틀린 문항 복습 필요':'슬라이드 다시 보기 추천';
+ box.innerHTML=`<div class="result"><div class="qno">결과</div><div class="big">${score} / ${Q.length}</div><p>${msg}</p>
+ <ol class="review">${Q.map((q,k)=>`<li>${log[k]?'⭕':'❌'} ${q.q}</li>`).join('')}</ol>
+ <p><button class="main" id="re">다시 풀기</button> &nbsp; <a href="slides.html">슬라이드 보기</a> · <a href="playground.html">플레이그라운드</a></p></div>`;
+ document.getElementById('re').onclick=()=>{cur=0;score=0;log=[];render()};
+}
+render();
+</script>
+</body>
+</html>

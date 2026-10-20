@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>확률분포 플레이그라운드</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@500;700&family=Noto+Sans+KR:wght@400;700&display=swap">
+<style>
+:root{--bg:#141C2E;--panel:#1F2A44;--line:#33415C;--ink:#F7F5EF;--soft:#C9D3E3;--blue:#8FB3E0;--org:#F2A66B}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Noto Sans KR',sans-serif;line-height:1.6}
+main{max-width:980px;margin:0 auto;padding:28px 16px 64px}
+a{color:var(--blue)}
+h1{font-family:'IBM Plex Sans KR',sans-serif;font-size:30px;margin:8px 0 2px}
+.sub{color:var(--soft);margin:0 0 20px}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.tabs button{background:var(--panel);color:var(--soft);border:1px solid var(--line);border-radius:10px;padding:10px 16px;font:inherit;font-weight:700;cursor:pointer}
+.tabs button.on{background:var(--org);color:#1F2A44;border-color:var(--org)}
+.scene{display:none}
+.scene.on{display:block}
+.stage{background:var(--panel);border-radius:16px;overflow:hidden}
+canvas{display:block;touch-action:none}
+.ctrl{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;margin:14px 0}
+.ctrl label{display:flex;align-items:center;gap:8px;color:var(--soft)}
+.ctrl input[type=range]{width:180px;accent-color:var(--org)}
+.ctrl select{font:inherit;padding:6px 10px;border-radius:8px;background:var(--panel);color:var(--ink);border:1px solid var(--line)}
+.ctrl button{background:var(--blue);color:#1F2A44;border:0;border-radius:10px;padding:9px 16px;font:inherit;font-weight:700;cursor:pointer}
+.ctrl button.ghost{background:transparent;color:var(--soft);border:1px solid var(--line)}
+.read{font-size:20px;font-weight:700;color:var(--org);margin:4px 0}
+.note{color:var(--soft);margin:8px 0 0;padding-left:18px}
+table{border-collapse:collapse;margin-top:8px;font-size:15px}
+td,th{border:1px solid var(--line);padding:4px 10px;text-align:center}
+th{color:var(--soft);font-weight:400}
+</style>
+</head>
+<body>
+<main>
+<a href="../index.html">← 목록</a>
+<h1>확률분포 플레이그라운드</h1>
+<p class="sub">1차시 확률변수와 확률분포 · Manim 스타일 애니메이션 (브라우저에서 바로 실행)</p>
+<div class="tabs">
+<button data-s="A" class="on">이산: 불량품 개수</button>
+<button data-s="B">연속: 확률 = 넓이</button>
+<button data-s="C">한 점의 확률</button>
+</div>
+
+<section class="scene on" id="A">
+<div class="stage"><canvas id="cA"></canvas></div>
+<div class="ctrl">
+<label>부품 수 n <input type="range" id="an" min="1" max="10" value="3"><b id="anv">3</b></label>
+<label>불량률 p <input type="range" id="ap" min="0" max="100" value="20"><b id="apv">0.20</b></label>
+<button id="a1">표본 1개</button><button id="a100">표본 100개</button><button class="ghost" id="ar">초기화</button>
+</div>
+<p class="read" id="aread"></p>
+<div id="atab"></div>
+<ul class="note">
+<li>파란 막대: 이론 확률 P(X = k)</li>
+<li>주황 테두리 막대: 실제로 뽑은 표본에서 불량품 k개가 나온 비율</li>
+<li>표본이 많아질수록 주황 막대가 파란 막대에 가까워짐 → 3차시 큰수의 법칙 예고</li>
+</ul>
+</section>
+
+<section class="scene" id="B">
+<div class="stage"><canvas id="cB"></canvas></div>
+<div class="ctrl">
+<label>확률밀도함수 <select id="bf">
+<option value="uniform">균등: f(x) = 1/10 (0~10)</option>
+<option value="tri" selected>삼각형: f(x) = x/8 (0~4)</option>
+<option value="cubic">f(x) = 4x³ (0~1)</option>
+<option value="beta">종 모양: f(x) = 6x(1−x) (0~1)</option>
+</select></label>
+<label>a <input type="range" id="ba" min="0" max="1000" value="0"></label>
+<label>b <input type="range" id="bb" min="0" max="1000" value="500"></label>
+<label><input type="checkbox" id="br"> 리만 합</label>
+<label>직사각형 <input type="range" id="bn" min="1" max="60" value="6"><b id="bnv">6</b></label>
+</div>
+<p class="read" id="bread"></p>
+<ul class="note">
+<li>그래프 위 a, b 핸들을 끌어서 구간 조절 가능</li>
+<li>확률 = 곡선 아래 넓이 = 정적분</li>
+<li>리만 합 직사각형을 늘릴수록 정적분 값에 가까워짐</li>
+<li>4x³ 선택 시 높이가 1보다 큰 부분 확인: 밀도는 확률이 아님</li>
+</ul>
+</section>
+
+<section class="scene" id="C">
+<div class="stage"><canvas id="cC"></canvas></div>
+<div class="ctrl">
+<label>중심 c <input type="range" id="cc" min="10" max="90" value="50"><b id="ccv">0.50</b></label>
+<button id="cgo">구간 줄이기</button><button class="ghost" id="crs">다시</button>
+</div>
+<p class="read" id="cread"></p>
+<ul class="note">
+<li>구간 폭이 0에 가까워지면 넓이도 0으로 수렴</li>
+<li>높이 f(c)는 그대로여도 한 점의 확률은 0</li>
+<li>그래서 P(a ≤ X ≤ b) = P(a &lt; X &lt; b)</li>
+</ul>
+</section>
+</main>
+<script>
+const C={bg:'#1F2A44',grid:'#33415C',axis:'#C9D3E3',blue:'#8FB3E0',org:'#F2A66B',orgF:'rgba(242,166,107,.8)',blueF:'rgba(143,179,224,.35)',ink:'#F7F5EF'};
+const ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+const now=()=>performance.now();
+class Tw{constructor(v){this.from=v;this.to=v;this.t0=0;this.d=1}
+ set(to,d=600){this.from=this.get();this.to=to;this.t0=now();this.d=d;return this}
+ get(){const t=Math.min(1,(now()-this.t0)/this.d);return this.from+(this.to-this.from)*ease(t)}}
+function cv(id){const c=document.getElementById(id),ctx=c.getContext('2d'),o={c,ctx,W:0,H:0};
+ o.resize=()=>{const dpr=devicePixelRatio||1;o.W=c.parentElement.clientWidth;o.H=Math.max(280,Math.round(o.W*.5));
+  c.width=o.W*dpr;c.height=o.H*dpr;c.style.height=o.H+'px';ctx.setTransform(dpr,0,0,dpr,0,0)};o.resize();return o}
+function frame(o){const m={l:56,r:24,t:28,b:44};m.w=o.W-m.l-m.r;m.h=o.H-m.t-m.b;m.y0=m.t+m.h;return m}
+function clear(o){const x=o.ctx;x.fillStyle=C.bg;x.fillRect(0,0,o.W,o.H)}
+function axes(o,m){const x=o.ctx;x.strokeStyle=C.axis;x.lineWidth=2;x.beginPath();x.moveTo(m.l-10,m.y0);x.lineTo(m.l+m.w+10,m.y0);x.moveTo(m.l,m.y0+8);x.lineTo(m.l,m.t-8);x.stroke()}
+function txt(o,s,X,Y,col=C.axis,al='center',sz=14,bold=false){const x=o.ctx;x.fillStyle=col;x.textAlign=al;x.font=(bold?'700 ':'')+sz+"px 'Noto Sans KR',sans-serif";x.fillText(s,X,Y)}
+function hgrid(o,m,ymax,steps=4){const x=o.ctx;x.strokeStyle=C.grid;x.lineWidth=1;x.setLineDash([4,6]);
+ for(let i=1;i<=steps;i++){const v=ymax*i/(steps+.4),y=m.y0-v/ymax*m.h;x.beginPath();x.moveTo(m.l,y);x.lineTo(m.l+m.w,y);x.stroke();txt(o,v.toFixed(v<1?2:1),m.l-8,y+5,C.axis,'right',12)}
+ x.setLineDash([])}
+
+/* ---------- A: 이산 ---------- */
+const oA=cv('cA');
+const A={n:3,p:.2,pm:[],h:[],cnt:[],tot:0,drops:[],ym:new Tw(1)};
+function binom(n,k,p){let c=1;for(let i=0;i<k;i++)c=c*(n-i)/(i+1);return c*Math.pow(p,k)*Math.pow(1-p,n-k)}
+function aSet(reset){A.pm=[...Array(A.n+1)].map((_,k)=>binom(A.n,k,A.p));
+ if(reset||A.h.length!==A.n+1){A.h=A.pm.map(()=>new Tw(0));A.cnt=Array(A.n+1).fill(0);A.tot=0;A.drops=[]}
+ A.h.forEach((t,k)=>t.set(A.pm[k]));aYm();aTab()}
+function aYm(){const em=A.tot?Math.max(...A.cnt)/A.tot:0;A.ym.set(Math.max(Math.max(...A.pm),em,.05)*1.2,400)}
+function aTab(){document.getElementById('atab').innerHTML='<table><tr><th>k</th>'+A.pm.map((_,k)=>`<td>${k}</td>`).join('')+'</tr><tr><th>P(X=k)</th>'+A.pm.map(v=>`<td>${v.toFixed(4)}</td>`).join('')+'</tr>'+(A.tot?'<tr><th>표본 비율</th>'+A.cnt.map(c=>`<td>${(c/A.tot).toFixed(3)}</td>`).join('')+'</tr>':'')+'</table>';
+ document.getElementById('aread').textContent=A.tot?`표본 ${A.tot}개 · 불량품 수 평균 ${(A.cnt.reduce((s,c,k)=>s+c*k,0)/A.tot).toFixed(2)}개`:'표본 버튼으로 실제 검사 시뮬레이션'}
+function aDrop(m){const t=now(),gap=Math.min(30,1800/m);for(let i=0;i<m;i++){let k=0;for(let j=0;j<A.n;j++)if(Math.random()<A.p)k++;A.drops.push({k,t0:t+i*gap})}}
+function drawA(){const o=oA,x=o.ctx,m=frame(o);clear(o);const ym=A.ym.get();hgrid(o,m,ym);axes(o,m);
+ const bw=m.w/(A.n+1),bx=k=>m.l+(k+.5)*bw,py=v=>m.y0-v/ym*m.h;
+ A.pm.forEach((_,k)=>{txt(o,k,bx(k),m.y0+22)});txt(o,'불량품 수 k',m.l+m.w,m.y0+38,C.axis,'right',13);txt(o,'확률',m.l+4,m.t-12,C.axis,'left',13);
+ if(A.tot){x.strokeStyle=C.org;x.lineWidth=3;A.cnt.forEach((c,k)=>{const v=c/A.tot;x.strokeRect(bx(k)-bw*.28,py(v),bw*.56,m.y0-py(v))})}
+ A.h.forEach((t,k)=>{const v=t.get(),X=bx(k);x.strokeStyle=C.blue;x.lineWidth=Math.min(14,bw*.18);x.lineCap='round';x.beginPath();x.moveTo(X,m.y0);x.lineTo(X,py(v));x.stroke();
+  x.fillStyle=C.blue;x.beginPath();x.arc(X,py(v),Math.min(8,bw*.1),0,7);x.fill();if(A.n<=6)txt(o,v.toFixed(3),X,py(v)-14,C.ink,'center',13)});
+ const tn=now();let landed=false;A.drops=A.drops.filter(d=>{const p=(tn-d.t0)/500;if(p<0)return true;if(p>=1){A.cnt[d.k]++;A.tot++;landed=true;return false}
+  const top=m.t,bot=A.tot?py(A.cnt[d.k]/A.tot):m.y0;x.fillStyle=C.org;x.beginPath();x.arc(bx(d.k),top+(bot-top)*ease(p),6,0,7);x.fill();return true});
+ if(landed){aYm();aTab()}}
+const an=document.getElementById('an'),ap=document.getElementById('ap');
+an.oninput=()=>{A.n=+an.value;document.getElementById('anv').textContent=A.n;aSet(true)};
+ap.oninput=()=>{A.p=ap.value/100;document.getElementById('apv').textContent=A.p.toFixed(2);aSet(false)};
+document.getElementById('a1').onclick=()=>aDrop(1);
+document.getElementById('a100').onclick=()=>aDrop(100);
+document.getElementById('ar').onclick=()=>aSet(true);
+aSet(true);
+
+/* ---------- B: 연속 ---------- */
+const oB=cv('cB');
+const DEN={uniform:{x0:0,x1:10,f:x=>.1,F:x=>x/10,lab:'f(x) = 1/10'},
+ tri:{x0:0,x1:4,f:x=>x/8,F:x=>x*x/16,lab:'f(x) = x/8'},
+ cubic:{x0:0,x1:1,f:x=>4*x**3,F:x=>x**4,lab:'f(x) = 4x³'},
+ beta:{x0:0,x1:1,f:x=>6*x*(1-x),F:x=>3*x*x-2*x**3,lab:'f(x) = 6x(1−x)'}};
+const NS=240;
+const B={key:'tri',a:new Tw(0),b:new Tw(.5),mo:new Tw(1),prev:null,rie:false,N:6};
+function bYmax(d){let mx=0;for(let i=0;i<=NS;i++)mx=Math.max(mx,d.f(d.x0+(d.x1-d.x0)*i/NS));return mx*1.2}
+function bYs(key,m){const d=DEN[key],ym=bYmax(d);return[...Array(NS+1)].map((_,i)=>m.y0-d.f(d.x0+(d.x1-d.x0)*i/NS)/ym*m.h)}
+function bCur(m){const ys=bYs(B.key,m);if(!B.prev)return ys;const t=B.mo.get(),ps=bYs(B.prev,m);return ys.map((y,i)=>ps[i]+(y-ps[i])*t)}
+function yAt(ys,u){const f=u*NS,i=Math.min(NS-1,Math.floor(f));return ys[i]+(ys[i+1]-ys[i])*(f-i)}
+function drawB(){const o=oB,x=o.ctx,m=frame(o);clear(o);const d=DEN[B.key],ym=bYmax(d);hgrid(o,m,ym);axes(o,m);
+ const ux=u=>m.l+u*m.w,ys=bCur(m);let a=B.a.get(),b=B.b.get();if(a>b)[a,b]=[b,a];
+ x.fillStyle=C.blueF;x.beginPath();x.moveTo(ux(0),m.y0);for(let i=0;i<=NS;i++)x.lineTo(ux(i/NS),ys[i]);x.lineTo(ux(1),m.y0);x.fill();
+ x.fillStyle=C.orgF;x.beginPath();x.moveTo(ux(a),m.y0);const s=Math.ceil(a*NS),e=Math.floor(b*NS);x.lineTo(ux(a),yAt(ys,a));for(let i=s;i<=e;i++)x.lineTo(ux(i/NS),ys[i]);x.lineTo(ux(b),yAt(ys,b));x.lineTo(ux(b),m.y0);x.fill();
+ let rs=0;const xa=d.x0+(d.x1-d.x0)*a,xb=d.x0+(d.x1-d.x0)*b;
+ if(B.rie&&b>a){const dx=(xb-xa)/B.N;x.strokeStyle=C.ink;x.lineWidth=1.5;x.fillStyle='rgba(247,245,239,.18)';
+  for(let k=0;k<B.N;k++){const xm=xa+(k+.5)*dx,h=d.f(xm);rs+=h*dx;const X0=ux((xa+k*dx-d.x0)/(d.x1-d.x0)),X1=ux((xa+(k+1)*dx-d.x0)/(d.x1-d.x0)),Y=m.y0-h/ym*m.h;x.fillRect(X0,Y,X1-X0,m.y0-Y);x.strokeRect(X0,Y,X1-X0,m.y0-Y)}}
+ x.strokeStyle=C.blue;x.lineWidth=4;x.lineJoin='round';x.beginPath();ys.forEach((y,i)=>i?x.lineTo(ux(i/NS),y):x.moveTo(ux(0),y));x.stroke();
+ [[a,'a'],[b,'b']].forEach(([u,l])=>{const X=ux(u);x.strokeStyle=C.org;x.lineWidth=2;x.setLineDash([5,5]);x.beginPath();x.moveTo(X,m.y0);x.lineTo(X,m.t);x.stroke();x.setLineDash([]);
+  x.fillStyle=C.org;x.beginPath();x.arc(X,m.y0,9,0,7);x.fill();txt(o,l,X,m.t-10,C.org,'center',15,true)});
+ txt(o,d.x0,ux(0),m.y0+24);txt(o,d.x1,ux(1),m.y0+24);txt(o,'x',m.l+m.w+14,m.y0+5,C.axis,'left',14);txt(o,d.lab,m.l+m.w-4,m.t+16,C.blue,'right',16,true);
+ const P=d.F(xb)-d.F(xa);document.getElementById('bread').textContent=`P(${xa.toFixed(2)} ≤ X ≤ ${xb.toFixed(2)}) = ${P.toFixed(4)}`+(B.rie?`  ·  리만 합 ${rs.toFixed(4)} (오차 ${Math.abs(rs-P).toFixed(4)})`:'')}
+const ba=document.getElementById('ba'),bb=document.getElementById('bb'),bn=document.getElementById('bn');
+ba.oninput=()=>B.a.set(ba.value/1000,120);bb.oninput=()=>B.b.set(bb.value/1000,120);
+bn.oninput=()=>{B.N=+bn.value;document.getElementById('bnv').textContent=B.N};
+document.getElementById('br').onchange=e=>B.rie=e.target.checked;
+document.getElementById('bf').onchange=e=>{B.prev=B.key;B.key=e.target.value;B.mo=new Tw(0).set(1,900)};
+let drag=null;
+oB.c.addEventListener('pointerdown',e=>{const m=frame(oB),r=oB.c.getBoundingClientRect(),u=(e.clientX-r.left-m.l)/m.w;drag=Math.abs(u-B.a.to)<Math.abs(u-B.b.to)?'a':'b';oB.c.setPointerCapture(e.pointerId);move(e)});
+function move(e){if(!drag)return;const m=frame(oB),r=oB.c.getBoundingClientRect(),u=Math.max(0,Math.min(1,(e.clientX-r.left-m.l)/m.w));B[drag].set(u,60);(drag==='a'?ba:bb).value=Math.round(u*1000)}
+oB.c.addEventListener('pointermove',move);oB.c.addEventListener('pointerup',()=>drag=null);
+
+/* ---------- C: 한 점 ---------- */
+const oC=cv('cC');
+const CS={c:.5,w:new Tw(.2)},bd=DEN.beta;
+function drawC(){const o=oC,x=o.ctx,m=frame(o);clear(o);const ym=bYmax(bd);hgrid(o,m,ym);axes(o,m);
+ const ux=u=>m.l+u*m.w,py=v=>m.y0-v/ym*m.h,w=Math.max(0,CS.w.get()),a=Math.max(0,CS.c-w),b=Math.min(1,CS.c+w);
+ x.fillStyle=C.orgF;x.beginPath();x.moveTo(ux(a),m.y0);for(let i=0;i<=80;i++){const u=a+(b-a)*i/80;x.lineTo(ux(u),py(bd.f(u)))}x.lineTo(ux(b),m.y0);x.fill();
+ x.strokeStyle=C.blue;x.lineWidth=4;x.beginPath();for(let i=0;i<=NS;i++){const u=i/NS;i?x.lineTo(ux(u),py(bd.f(u))):x.moveTo(ux(u),py(bd.f(u)))}x.stroke();
+ const X=ux(CS.c);x.strokeStyle=C.ink;x.lineWidth=2;x.setLineDash([4,6]);x.beginPath();x.moveTo(X,m.y0);x.lineTo(X,py(bd.f(CS.c)));x.stroke();x.setLineDash([]);
+ txt(o,'c',X,m.y0+24,C.org,'center',15,true);txt(o,'f(x) = 6x(1−x)',m.l+m.w-4,m.t+16,C.blue,'right',16,true);
+ const P=bd.F(b)-bd.F(a);document.getElementById('cread').textContent=w<1e-4?`폭 0 → P(X = ${CS.c.toFixed(2)}) = 0`:`폭 ${(b-a).toFixed(4)} → P = ${P.toFixed(5)}`}
+const cc=document.getElementById('cc');
+cc.oninput=()=>{CS.c=cc.value/100;document.getElementById('ccv').textContent=CS.c.toFixed(2)};
+document.getElementById('cgo').onclick=()=>CS.w.set(0,3200);
+document.getElementById('crs').onclick=()=>CS.w.set(.2,800);
+
+/* ---------- 공통 ---------- */
+let active='A';const draw={A:drawA,B:drawB,C:drawC},cvs={A:oA,B:oB,C:oC};
+document.querySelectorAll('.tabs button').forEach(t=>t.onclick=()=>{active=t.dataset.s;
+ document.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('on',x===t));
+ document.querySelectorAll('.scene').forEach(s=>s.classList.toggle('on',s.id===active));cvs[active].resize()});
+addEventListener('resize',()=>cvs[active].resize());
+(function loop(){draw[active]();requestAnimationFrame(loop)})();
+</script>
+</body>
+</html>

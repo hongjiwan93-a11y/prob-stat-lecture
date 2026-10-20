@@ -67,3 +67,9 @@
 
 ## 차시별 아티팩트 링크
 - 1차시: https://claude.ai/artifact/5WMsTVy3r4NX9TeRA7hK3d (로컬: `03_초안/01차시/`)
+
+## 웹사이트 (GitHub Pages)
+- 주소: https://hongjiwan93-a11y.github.io/prob-stat-lecture/ (main 브랜치 `docs/` 폴더)
+- 슬라이드 HTML: 차시 슬라이드 수정 후 `python3 tools/build_site.py` 실행 → `docs/NN/slides.html`, `docs/index.html` 갱신
+- 차시별 웹 퀴즈 `docs/NN/quiz.html`, 애니메이션 플레이그라운드 `docs/NN/playground.html` (직접 작성, 같은 말투·색 규칙 적용)
+- 교과서 원본은 저장소에 올리지 않음 (`.gitignore`)

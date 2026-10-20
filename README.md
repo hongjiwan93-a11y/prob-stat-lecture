@@ -6,6 +6,7 @@
 - 제작 규칙: `CLAUDE.md`
 - 커리큘럼: `00_기획/커리큘럼.md`
 - 슬라이드: `03_초안/NN차시/project/` (claude.ai Slides 아티팩트 원본)
+- 웹사이트: https://hongjiwan93-a11y.github.io/prob-stat-lecture/ (`docs/`, `python3 tools/build_site.py`로 슬라이드 HTML 생성)
 - 제작 스킬: `.claude/skills/교육스킬test/`
 
 > 교과서 원본(`01_참고자료/교과서/`)은 저작권 때문에 저장소에 포함하지 않음. 로컬에 직접 넣어 사용.
