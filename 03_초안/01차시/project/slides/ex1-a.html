@@ -1,0 +1,26 @@
+<section id="ex1-a" style="background:#EDF1F6;color:#1F2A44;font-family:'Noto Sans KR', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-size:24px;font-weight:700;color:#B4531A;letter-spacing:2px">예제 1 · 풀이</p>
+<h2 style="font-family:'IBM Plex Sans KR', Arial, sans-serif;font-size:64px;font-weight:700;line-height:1.15">조합으로 구한 확률분포</h2>
+</div>
+<div style="display:flex;gap:56px;align-items:center">
+<div style="flex:1;display:flex;flex-direction:column;gap:24px">
+<div style="background:#FDFCF9;border:2px solid #C9D3E3;border-radius:16px;padding:28px 36px;display:flex;flex-direction:column;gap:12px">
+<p style="font-size:30px">P(<i>X</i> = 1) = ₄C₁ × ₂C₂ ÷ ₆C₃ = 4/20 = <b>1/5</b></p>
+<p style="font-size:30px">P(<i>X</i> = 2) = ₄C₂ × ₂C₁ ÷ ₆C₃ = 12/20 = <b>3/5</b></p>
+<p style="font-size:30px">P(<i>X</i> = 3) = ₄C₃ × ₂C₀ ÷ ₆C₃ = 4/20 = <b>1/5</b></p>
+</div>
+<table style="font-size:30px;color:#1F2A44;background:#FDFCF9">
+<tr style="background:#DCE7F5"><th style="width:28%;text-align:center"><i>X</i></th><th style="width:18%;text-align:center">1</th><th style="width:18%;text-align:center">2</th><th style="width:18%;text-align:center">3</th><th style="width:18%;text-align:center">합계</th></tr>
+<tr><td style="text-align:center">P(<i>X</i> = <i>x</i>)</td><td style="text-align:center">1/5</td><td style="text-align:center">3/5</td><td style="text-align:center">1/5</td><td style="text-align:center"><b>1</b></td></tr>
+</table>
+<div style="background:#FBE3D2;border-left:8px solid #D9661F;border-radius:12px;padding:24px 32px">
+<p style="font-size:32px;font-weight:700">⑵ P(<i>X</i> ≤ 2) = 1/5 + 3/5 = 4/5</p>
+</div>
+</div>
+<svg aria-label="예제 1의 확률분포 막대그래프. x=1에서 1/5, x=2에서 3/5, x=3에서 1/5이며 x가 2 이하인 막대는 주황색" width="600" height="500" viewBox="0 0 600 500"><g stroke="#C9D3E3" stroke-width="2" stroke-dasharray="8 8"><line x1="90" y1="320" x2="500" y2="320"/><line x1="90" y1="120" x2="340" y2="120"/></g><line x1="90" y1="420" x2="570" y2="420" stroke="#1F2A44" stroke-width="3"/><line x1="90" y1="420" x2="90" y2="50" stroke="#1F2A44" stroke-width="3"/><g stroke="#D9661F" stroke-width="14" stroke-linecap="round"><line x1="210" y1="420" x2="210" y2="320"/><line x1="340" y1="420" x2="340" y2="120"/></g><line x1="470" y1="420" x2="470" y2="320" stroke="#9AA3AF" stroke-width="14" stroke-linecap="round"/><g fill="#D9661F"><circle cx="210" cy="320" r="14"/><circle cx="340" cy="120" r="14"/></g><circle cx="470" cy="320" r="14" fill="#9AA3AF"/><g font-family="sans-serif" font-size="32" fill="#1F2A44" text-anchor="middle"><text x="210" y="466">1</text><text x="340" y="466">2</text><text x="470" y="466">3</text><text x="580" y="466" font-style="italic">x</text></g><g font-family="sans-serif" font-size="30" fill="#4A5568" text-anchor="end"><text x="76" y="331">1/5</text><text x="76" y="131">3/5</text></g><text x="100" y="36" font-family="sans-serif" font-size="30" fill="#1F2A44">P(X = x)</text><text x="275" y="250" font-family="sans-serif" font-size="28" font-weight="700" fill="#B4531A" text-anchor="middle">X ≤ 2</text></svg>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1200px;font-size:24px;color:#6B7280">1차시 확률변수와 확률분포 · 교과서 83쪽</p>
+<p style="position:absolute;right:128px;bottom:64px;width:200px;font-size:24px;color:#6B7280;text-align:right">12</p>
+<aside>풀이. 분모는 6팀 중 3팀을 뽑는 전체 경우의 수 ₆C₃ = 20. 분자는 B에서 x팀, A에서 3 − x팀을 뽑는 경우의 수. 표의 합계가 1인지 반드시 확인하는 습관 강조. ⑵는 그래프에서 주황 막대 두 개의 길이 합. 여사건으로 1 − P(X = 3) = 1 − 1/5로 구하는 방법도 함께 소개.</aside>
+</section>
